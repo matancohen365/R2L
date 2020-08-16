@@ -91,31 +91,4 @@ class CSSProcessor implements ProcessorInterface
         return static::PREPEND_RULES . $contents;
     }
 
-    private static function d()
-    {
-
-        require __DIR__ . '/vendor/autoload.php';
-
-        // css files
-
-        $CSSProcessor = new \AutoRTL\CSSProcessor();
-
-        $CSSContents = file_get_contents('path/to/theme.css');
-
-        $CSSNewContents = $CSSProcessor->process($CSSContents);
-
-        file_put_contents('path/to/theme.rtl.css', $CSSNewContents);
-
-        // liquid.sass files
-
-        $LiquidSassProcessor = new \AutoRTL\LiquidSassProcessor();
-
-        $LiquidSassContents = file_get_contents('path/to/theme.liquid.sass');
-
-        $LiquidSassNewContents = $LiquidSassProcessor->process($LiquidSassContents);
-
-        file_put_contents('path/to/theme.rtl.liquid.sass', $LiquidSassNewContents);
-
-    }
-
 }
