@@ -1,0 +1,21 @@
+{
+  "name": "matancohen365/auto-rtl",
+  "description": "Simple class to rtl your themes",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Matan Cohen",
+      "email": "matancohen365@gmail.com"
+    }
+  ],
+  "require": {},
+  "require-dev": {
+    "phpunit/phpunit": "^9"
+  },
+  "autoload": {
+    "classmap": [
+      "src/"
+    ]
+  }
+}
