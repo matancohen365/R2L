@@ -11,9 +11,11 @@ Simple class to rtl your themes
 
 <?php
 
+use AutoRTL\CSSProcessor;
+
 require __DIR__ . '/vendor/autoload.php';  
   
-$processor = new \AutoRTL\CSSProcessor();  
+$processor = new CSSProcessor();  
   
 $contents = file_get_contents('path/to/theme.css');  
   
@@ -29,9 +31,11 @@ file_put_contents('path/to/theme.rtl.css', $RTLContents);
 
 <?php
 
+use AutoRTL\LiquidSassProcessor;
+
 require __DIR__ . '/vendor/autoload.php';  
   
-$processor = new \AutoRTL\LiquidSassProcessor();  
+$processor = new LiquidSassProcessor();
   
 $contents = file_get_contents('path/to/theme.liquid.sass');  
   

@@ -12,6 +12,8 @@ class LiquidSassProcessorTest extends TestCase
     public function testProcess()
     {
 
+        $this->testPrependRules();
+
         $this->testTransformMarginPaddingBorders();
 
         $this->testTransformDirection();
@@ -20,8 +22,6 @@ class LiquidSassProcessorTest extends TestCase
 
         $this->testTransformRules();
 
-        $this->testPrependRules();
-
     }
 
     public function testTransformMarginPaddingBorders()
@@ -29,7 +29,7 @@ class LiquidSassProcessorTest extends TestCase
 
         $cp = new LiquidSassProcessor();
 
-        // padding
+        // padding /* top | right | bottom | left */
 
         $this->assertEquals(self::PREPEND_RULES . 'padding:1px;', $cp->process('padding:1px;'));
 
@@ -39,11 +39,11 @@ class LiquidSassProcessorTest extends TestCase
 
 
         $contents = 'padding:1px 2% 3px 4rem;';
-        $expected = self::PREPEND_RULES . "padding-top: 1px ;\npadding-#{\$direction_start}: 2% ;\npadding-bottom: 3px ;\npadding-#{\$direction_end}: 4rem ;\n";
+        $expected = self::PREPEND_RULES . "padding-top: 1px ;\npadding-#{\$direction_end}: 2% ;\npadding-bottom: 3px ;\npadding-#{\$direction_start}: 4rem ;\n";
         $this->assertEquals($expected, $cp->process($contents));
 
         $contents = 'padding:1px 2% 3px 4rem !important;';
-        $expected = self::PREPEND_RULES . "padding-top: 1px !important;\npadding-#{\$direction_start}: 2% !important;\npadding-bottom: 3px !important;\npadding-#{\$direction_end}: 4rem !important;\n";
+        $expected = self::PREPEND_RULES . "padding-top: 1px !important;\npadding-#{\$direction_end}: 2% !important;\npadding-bottom: 3px !important;\npadding-#{\$direction_start}: 4rem !important;\n";
         $this->assertEquals($expected, $cp->process($contents));
 
         // margin
@@ -56,11 +56,11 @@ class LiquidSassProcessorTest extends TestCase
 
 
         $contents = 'margin:1px 2% 3px 4rem;';
-        $expected = self::PREPEND_RULES . "margin-top: 1px ;\nmargin-#{\$direction_start}: 2% ;\nmargin-bottom: 3px ;\nmargin-#{\$direction_end}: 4rem ;\n";
+        $expected = self::PREPEND_RULES . "margin-top: 1px ;\nmargin-#{\$direction_end}: 2% ;\nmargin-bottom: 3px ;\nmargin-#{\$direction_start}: 4rem ;\n";
         $this->assertEquals($expected, $cp->process($contents));
 
         $contents = 'margin:1px function(2+5*3, 23) $var 4rem !important;';
-        $expected = self::PREPEND_RULES . "margin-top: 1px !important;\nmargin-#{\$direction_start}: function(2+5*3, 23) !important;\nmargin-bottom: \$var !important;\nmargin-#{\$direction_end}: 4rem !important;\n";
+        $expected = self::PREPEND_RULES . "margin-top: 1px !important;\nmargin-#{\$direction_end}: function(2+5*3, 23) !important;\nmargin-bottom: \$var !important;\nmargin-#{\$direction_start}: 4rem !important;\n";
         $this->assertEquals($expected, $cp->process($contents));
 
         // border-radius
@@ -73,11 +73,11 @@ class LiquidSassProcessorTest extends TestCase
 
 
         $contents = 'border-radius:1px 2% 3px 4rem;';
-        $expected = self::PREPEND_RULES . "border-top-#{\$direction_end}-radius: 1px ;\nborder-top-#{\$direction_start}-radius: 2% ;\nborder-bottom-#{\$direction_start}-radius: 3px ;\nborder-bottom-#{\$direction_end}-radius: 4rem ;\n";
+        $expected = self::PREPEND_RULES . "border-top-#{\$direction_start}-radius: 1px ;\nborder-top-#{\$direction_end}-radius: 2% ;\nborder-bottom-#{\$direction_end}-radius: 3px ;\nborder-bottom-#{\$direction_start}-radius: 4rem ;\n";
         $this->assertEquals($expected, $cp->process($contents));
 
         $contents = 'border-radius:1px 2% 3px 4rem !important;';
-        $expected = self::PREPEND_RULES . "border-top-#{\$direction_end}-radius: 1px !important;\nborder-top-#{\$direction_start}-radius: 2% !important;\nborder-bottom-#{\$direction_start}-radius: 3px !important;\nborder-bottom-#{\$direction_end}-radius: 4rem !important;\n";
+        $expected = self::PREPEND_RULES . "border-top-#{\$direction_start}-radius: 1px !important;\nborder-top-#{\$direction_end}-radius: 2% !important;\nborder-bottom-#{\$direction_end}-radius: 3px !important;\nborder-bottom-#{\$direction_start}-radius: 4rem !important;\n";
         $this->assertEquals($expected, $cp->process($contents));
 
     }
@@ -87,16 +87,13 @@ class LiquidSassProcessorTest extends TestCase
 
         $cp = new LiquidSassProcessor();
 
-        $this->assertEquals(self::PREPEND_RULES . 'dir:#{$direction_upside};', $cp->process('dir:ltr;'));
+        $this->assertEquals(self::PREPEND_RULES . 'body { dir:#{$direction}; }', $cp->process('body { dir:ltr; }'));
+        $this->assertEquals(self::PREPEND_RULES . 'body { dir:#{$direction_upside}; }', $cp->process('body { dir:rtl; }'));
 
-        $this->assertEquals(self::PREPEND_RULES . 'body[dir="#{$direction_upside}"]', $cp->process('body[dir="ltr"]'));
+        $this->assertEquals(self::PREPEND_RULES . 'body[dir="#{$direction}"] {...}', $cp->process('body[dir="ltr"] {...}'));
+        $this->assertEquals(self::PREPEND_RULES . 'body[dir="#{$direction_upside}"]', $cp->process('body[dir="rtl"]'));
 
-        $this->assertEquals(self::PREPEND_RULES . 'dir:#{$direction};', $cp->process('dir:rtl;'));
-
-        $this->assertEquals(self::PREPEND_RULES . 'body[dir="#{$direction}"]', $cp->process('body[dir="rtl"]'));
-
-        $this->assertEquals(self::PREPEND_RULES . 'wordwithltrinit', $cp->process('wordwithltrinit'));
-
+        $this->assertEquals(self::PREPEND_RULES . 'wordwith:ltrinit;', $cp->process('wordwith:ltrinit;'));
         $this->assertEquals(self::PREPEND_RULES . 'wordwithrtlinit', $cp->process('wordwithrtlinit'));
 
     }
@@ -128,23 +125,15 @@ class LiquidSassProcessorTest extends TestCase
 
         $cp = new LiquidSassProcessor();
 
-        $this->assertEquals(self::PREPEND_RULES . '#{$direction_start}:0px;', $cp->process('right:0px;'));
-        $this->assertEquals(self::PREPEND_RULES . '#{$direction_start}  :  0px  ;', $cp->process('right  :  0px  ;'));
+        $this->assertEquals(self::PREPEND_RULES . 'body {float:#{$direction_start};}', $cp->process('body {float:left;}'));
+        $this->assertEquals(self::PREPEND_RULES . 'body {float:#{$direction_end};}', $cp->process('body {float:right;}'));
 
-        $this->assertEquals(self::PREPEND_RULES . 'padding-#{$direction_start}  :  #{$direction_start}  ;', $cp->process('padding-right  :  right  ;'));
+        $this->assertEquals(self::PREPEND_RULES . '.left {float:#{$direction_start};}', $cp->process('.left {float:left;}'));
+        $this->assertEquals(self::PREPEND_RULES . '.right {float:#{$direction_end};}', $cp->process('.right {float:right;}'));
 
-        $this->assertEquals(self::PREPEND_RULES . 'text  :  #{$direction_end}  ;', $cp->process('text  :  left  ;'));
+        $this->assertEquals(self::PREPEND_RULES . '.left-body {#{$direction_start}:$left;}', $cp->process('.left-body {left:$left;}'));
+        $this->assertEquals(self::PREPEND_RULES . '.right-body {  #{$direction_end}  :  $right ; }', $cp->process('.right-body {  right  :  $right ; }'));
 
-        $this->assertEquals(self::PREPEND_RULES . '$right : $left;', $cp->process('$right : $left;'));
-
-        $this->assertEquals(self::PREPEND_RULES . '.right { text : #{$direction_end};}', $cp->process('.right { text : left;}'));
-        $this->assertEquals(self::PREPEND_RULES . '.left { text : #{$direction_start} ;}', $cp->process('.left { text : right ;}'));
-
-        $this->assertEquals(self::PREPEND_RULES . 'copyright', $cp->process('copyright'));
-        $this->assertEquals(self::PREPEND_RULES . 'copyleft', $cp->process('copyleft'));
-
-        $this->assertEquals(self::PREPEND_RULES . '.right { text : #{$direction_end};}', $cp->process('.right { text : left;}'));
-        $this->assertEquals(self::PREPEND_RULES . '.right { text : #{$direction_start} ;}', $cp->process('.right { text : right ;}'));
     }
 
 

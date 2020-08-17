@@ -12,6 +12,8 @@ class CSSProcessorTest extends TestCase
     public function testProcess()
     {
 
+        $this->testPrependRules();
+
         $this->testTransformMarginPaddingBorders();
 
         $this->testTransformDirection();
@@ -19,8 +21,6 @@ class CSSProcessorTest extends TestCase
         $this->testTransformAngles();
 
         $this->testTransformRules();
-
-        $this->testPrependRules();
 
     }
 

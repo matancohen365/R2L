@@ -13,22 +13,21 @@ class LiquidSassProcessor extends CSSProcessor
     const VARS_START_REPLACEMENT = '24020DF9233';
     const VARS_END_REPLACEMENT = 'C5DE7B08D23';
 
-    public const PREPEND_RULES = '\$direction : rtl;
+    public const PREPEND_RULES = '$direction: rtl;
+$direction_upside: ltr;
+$direction_angle: -1;
+$direction_start: right;
+$direction_end: left;
 
-\$direction_upside : ltr;
-\$direction_angle : -1;
-\$direction_start : right;
-\$direction_end : left;
-
-@if \$direction ==  ltr {
-    \$direction_upside : rtl;
-    \$direction_angle : 1;
-    \$direction_start : left;
-    \$direction_end : right;
+@if $direction == ltr {
+	$direction_upside: rtl;
+	$direction_angle: 1;
+	$direction_start: left;
+	$direction_end: right;
 }
 
 body {
-  direction: \$direction;
+	direction: $direction;
 }' . PHP_EOL;
 
     public function process(string $contents): string
@@ -72,8 +71,8 @@ body {
             static::DIRECTION_PATTERN,
             function ($matches) {
                 return str_ireplace(
-                    [static::DIRECTION, static::UPSIDE_DIRECTION,],
-                    [static::DIRECTION_VAR_NAME, static::DIRECTION_UPSIDE_VAR_NAME],
+                    [static::UPSIDE_DIRECTION, static::DIRECTION,],
+                    [static::DIRECTION_VAR_NAME, static::DIRECTION_UPSIDE_VAR_NAME,],
                     $matches[0]
                 );
             },
@@ -94,7 +93,7 @@ body {
             static::RULES_PATTERN,
             function ($matches) {
                 return str_ireplace(
-                    [static::DIRECTION_END, static::DIRECTION_START,],
+                    [static::DIRECTION_START, static::DIRECTION_END,],
                     [static::DIRECTION_END_VAR_NAME, static::DIRECTION_START_VAR_NAME,],
                     $matches[0]
                 );
