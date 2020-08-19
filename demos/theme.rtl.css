@@ -3920,11 +3920,7 @@ input[type="button"].btn-block {
   display: inline-block;
   width: 100%;
   height: calc(1.5em + 0.75rem + 2px);
-  padding-top: 0.375rem ;
-padding-left: 1.75rem ;
-padding-bottom: 0.375rem ;
-padding-right: 0.75rem ;
-
+  padding-top: 0.375rem ; padding-left: 1.75rem ; padding-bottom: 0.375rem ; padding-right: 0.75rem ;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -4050,11 +4046,7 @@ padding-right: 0.75rem ;
   content: "Browse";
   background-color: #e9ecef;
   border-right: inherit;
-  border-top-right-radius: 0 ;
-border-top-left-radius: 0.25rem ;
-border-bottom-left-radius: 0.25rem ;
-border-bottom-right-radius: 0 ;
-
+  border-top-right-radius: 0 ; border-top-left-radius: 0.25rem ; border-bottom-left-radius: 0.25rem ; border-bottom-right-radius: 0 ;
 }
 
 .custom-range {
@@ -4798,11 +4790,7 @@ border-bottom-right-radius: 0 ;
 }
 
 .card-header:first-child {
-  border-top-right-radius:  calc(0.25rem - 1px) ;
-border-top-left-radius: calc(0.25rem - 1px) ;
-border-bottom-left-radius: 0 ;
-border-bottom-right-radius: 0 ;
-
+  border-top-right-radius: calc(0.25rem - 1px) ; border-top-left-radius: calc(0.25rem - 1px) ; border-bottom-left-radius: 0 ; border-bottom-right-radius: 0 ;
 }
 
 .card-header + .list-group .list-group-item:first-child {
@@ -4816,11 +4804,7 @@ border-bottom-right-radius: 0 ;
 }
 
 .card-footer:last-child {
-  border-top-right-radius: 0 ;
-border-top-left-radius: 0 ;
-border-bottom-left-radius: calc(0.25rem - 1px) ;
-border-bottom-right-radius: calc(0.25rem - 1px) ;
-
+  border-top-right-radius: 0 ; border-top-left-radius: 0 ; border-bottom-left-radius: calc(0.25rem - 1px) ; border-bottom-right-radius: calc ;(0.25rem - 1px);
 }
 
 .card-header-tabs {
@@ -6066,11 +6050,7 @@ a.close.disabled {
 
 .modal-header .close {
   padding: 1rem 1rem;
-  margin-top: -1rem ;
-margin-left: -1rem ;
-margin-bottom: -1rem ;
-margin-right: auto ;
-
+  margin-top: -1rem ; margin-left: -1rem ; margin-bottom: -1rem ; margin-right: auto ;
 }
 
 .modal-title {
@@ -6473,8 +6453,8 @@ margin-right: auto ;
 
 .carousel-item-prev:not(.carousel-item-right),
 .active.carousel-item-left {
-  -webkit-transform: translateX(100%);
-  transform: translateX(100%);
+  -webkit-transform: translateX(+100%);
+  transform: translateX(+100%);
 }
 
 .carousel-fade .carousel-item {

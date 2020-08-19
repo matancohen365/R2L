@@ -3,25 +3,50 @@
 use AutoRTL\CSSProcessor;
 use AutoRTL\LiquidSassProcessor;
 
-require __DIR__ . '../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
+
+function getRTLFileName(string $filename): string
+{
+
+    $basename = basename($filename);
+
+    $basenameParts = explode('.', $basename);
+
+    $RTLBasename = sprintf('%s.rtl.%s', array_shift($basenameParts), implode('.', $basenameParts));
+
+    return str_ireplace($basename, $RTLBasename, $filename);
+
+}
 
 /// .css
 
-$processor = new CSSProcessor();
+foreach (glob(__DIR__ . '*/*.css') as $file) {
 
-$contents = file_get_contents(__DIR__ . '/theme.css');
+    print $file . PHP_EOL;
 
-$RTLContents = $processor->process($contents);
+    $processor = new CSSProcessor();
 
-file_put_contents(__DIR__ . '/theme.rtl.css', $RTLContents);
+    $contents = file_get_contents($file);
 
+    $RTLContents = $processor->process($contents);
+
+    file_put_contents(getRTLFileName($file), $RTLContents);
+
+}
 
 /// .scss.liquid
 
-$processor = new LiquidSassProcessor();
+foreach (glob(__DIR__ . '*/*.scss.liquid') as $file) {
 
-$contents = file_get_contents(__DIR__ . '/theme.scss.liquid');
+    print $file . PHP_EOL;
 
-$RTLContents = $processor->process($contents);
+    $processor = new LiquidSassProcessor();
 
-file_put_contents(__DIR__ . '/theme.rtl.scss.liquid', $RTLContents);
+    $contents = file_get_contents($file);
+
+    $RTLContents = $processor->process($contents);
+
+    file_put_contents(getRTLFileName($file), $RTLContents);
+
+}
+

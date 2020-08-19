@@ -5,23 +5,34 @@ namespace AutoRTL;
 class LiquidSassProcessor extends CSSProcessor
 {
     const DIRECTION_VAR_NAME = '#{$direction}';
-    const DIRECTION_UPSIDE_VAR_NAME = '#{$direction_upside}';
-    const DIRECTION_START_VAR_NAME = '#{$direction_start}';
-    const DIRECTION_END_VAR_NAME = '#{$direction_end}';
-    const DIRECTION_ANGLE_VAR_NAME = '#{$direction_angle}';
-    const VARS_PATTERN = '#(\$[a-z0-9_-]+)#ixu';
-    const VARS_START_REPLACEMENT = '24020DF9233';
-    const VARS_END_REPLACEMENT = 'C5DE7B08D23';
 
-    public const PREPEND_RULES = '$direction: rtl;
+    const DIRECTION_UPSIDE_VAR_NAME = '#{$direction_upside}';
+
+    const DIRECTION_START_VAR_NAME = '#{$direction_start}';
+
+    const DIRECTION_END_VAR_NAME = '#{$direction_end}';
+
+    const DIRECTION_ANGLE = '#{$direction_angle}';
+
+    const DIRECTION_UPSIDE_ANGLE = '#{$direction_upside_angle}';
+
+    const VARS_PATTERN = '#\$[a-z0-9_-]+#ixu';
+
+    const TEMP_START_REPLACEMENT = '24020DF9233';
+
+    const TEMP_END_REPLACEMENT = 'C5DE7B08D23';
+
+    const PREPEND_PROPERTIES = '$direction: rtl;
 $direction_upside: ltr;
-$direction_angle: -1;
+$direction_angle: \'-\';
+$direction_upside_angle: \'+\';
 $direction_start: right;
 $direction_end: left;
 
 @if $direction == ltr {
 	$direction_upside: rtl;
-	$direction_angle: 1;
+	$direction_angle: \'+\';
+    $direction_upside_angle: \'-\';
 	$direction_start: left;
 	$direction_end: right;
 }
@@ -48,7 +59,7 @@ body {
             function ($matches) {
                 return str_ireplace(
                     [static::DIRECTION_END, static::DIRECTION_START,],
-                    [static::VARS_END_REPLACEMENT, static::VARS_START_REPLACEMENT,],
+                    [static::TEMP_END_REPLACEMENT, static::TEMP_START_REPLACEMENT,],
                     $matches[0]
                 );
             },
@@ -59,13 +70,13 @@ body {
     protected function decryptVars(string $contents): string
     {
         return str_ireplace(
-            [static::VARS_END_REPLACEMENT, static::VARS_START_REPLACEMENT,],
+            [static::TEMP_END_REPLACEMENT, static::TEMP_START_REPLACEMENT,],
             [static::DIRECTION_END, static::DIRECTION_START,],
             $contents
         );
     }
 
-    protected function transformDirection(string $contents): string
+    protected function processDirection(string $contents): string
     {
         return preg_replace_callback(
             static::DIRECTION_PATTERN,
@@ -80,17 +91,10 @@ body {
         );
     }
 
-    protected function transformAngles(string $contents): string
-    {
-        return preg_replace_callback(static::TRANSLATE_PATTERN, function ($matches) {
-            return sprintf('%s%s*%s', $matches[1], static::DIRECTION_ANGLE_VAR_NAME, $matches[3]);
-        }, $contents);
-    }
-
-    protected function transformRules(string $contents): string
+    protected function processValues(string $contents): string
     {
         return preg_replace_callback(
-            static::RULES_PATTERN,
+            static::PROPERTY_VALUE_PATTERN,
             function ($matches) {
                 return str_ireplace(
                     [static::DIRECTION_START, static::DIRECTION_END,],

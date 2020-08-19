@@ -1,12 +1,14 @@
 $direction: rtl;
 $direction_upside: ltr;
-$direction_angle: -1;
+$direction_angle: '-';
+$direction_upside_angle: '+';
 $direction_start: right;
 $direction_end: left;
 
 @if $direction == ltr {
 	$direction_upside: rtl;
-	$direction_angle: 1;
+	$direction_angle: '+';
+    $direction_upside_angle: '-';
 	$direction_start: left;
 	$direction_end: right;
 }
@@ -3914,11 +3916,7 @@ select::-ms-expand {
 
 .order-discount--list {
   padding: 0;
-  margin-top: 0.8em ;
-margin-#{$direction_end}: 0 ;
-margin-bottom: 0.6em ;
-margin-#{$direction_start}: 1.3em ;
-
+  margin-top: 0.8em ; margin-#{$direction_end}: 0 ; margin-bottom: 0.6em ; margin-#{$direction_start}: 1.3em ;
   list-style: none;
 }
 
@@ -4841,11 +4839,7 @@ button {
   text-decoration: none;
   text-align: center;
   opacity: $mfp-controls-opacity;
-  padding-top: 0 ;
-padding-#{$direction_end}: 0 ;
-padding-bottom: 18px ;
-padding-#{$direction_start}: 10px ;
-
+  padding-top: 0 ; padding-#{$direction_end}: 0 ; padding-bottom: 18px ; padding-#{$direction_start}: 10px ;
   color: $mfp-controls-color;
   font-style: normal;
   font-size: 48px;

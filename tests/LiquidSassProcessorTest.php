@@ -2,143 +2,99 @@
 
 namespace AutoRTL;
 
-use PHPUnit\Framework\TestCase;
+require_once 'AbstractProcessorTest.php';
 
-class LiquidSassProcessorTest extends TestCase
+class LiquidSassProcessorTest extends AbstractProcessorTest
 {
 
-    const PREPEND_RULES = LiquidSassProcessor::PREPEND_RULES;
-
-    public function testProcess()
+    static public function getProcessor(): ProcessorInterface
     {
-
-        $this->testPrependRules();
-
-        $this->testTransformMarginPaddingBorders();
-
-        $this->testTransformDirection();
-
-        $this->testTransformAngles();
-
-        $this->testTransformRules();
-
+        return new LiquidSassProcessor();
     }
 
     public function testTransformMarginPaddingBorders()
     {
+        static::assertResults('padding:1px;', 'padding:1px;');
 
-        $cp = new LiquidSassProcessor();
+        static::assertResults('padding:1px 2px;', 'padding:1px 2px;');
 
-        // padding /* top | right | bottom | left */
+        static::assertResults('padding:1px 2px 3px;', 'padding:1px 2px 3px;');
 
-        $this->assertEquals(self::PREPEND_RULES . 'padding:1px;', $cp->process('padding:1px;'));
+        static::assertResults('padding:1px 2% 3px 4rem;', 'padding-top: 1px ; padding-#{$direction_end}: 2% ; padding-bottom: 3px ; padding-#{$direction_start}: 4rem ;');
 
-        $this->assertEquals(self::PREPEND_RULES . 'padding:1px 2px;', $cp->process('padding:1px 2px;'));
+        static::assertResults('padding:1px 2% 3px 4rem !important;', 'padding-top: 1px !important; padding-#{$direction_end}: 2% !important; padding-bottom: 3px !important; padding-#{$direction_start}: 4rem !important;');
 
-        $this->assertEquals(self::PREPEND_RULES . 'padding:1px 2px 3px;', $cp->process('padding:1px 2px 3px;'));
+        static::assertResults('margin:1px;', 'margin:1px;');
 
+        static::assertResults('margin:1px 2px;', 'margin:1px 2px;');
 
-        $contents = 'padding:1px 2% 3px 4rem;';
-        $expected = self::PREPEND_RULES . "padding-top: 1px ;\npadding-#{\$direction_end}: 2% ;\npadding-bottom: 3px ;\npadding-#{\$direction_start}: 4rem ;\n";
-        $this->assertEquals($expected, $cp->process($contents));
+        static::assertResults('margin:1px 2px 3px;', 'margin:1px 2px 3px;');
 
-        $contents = 'padding:1px 2% 3px 4rem !important;';
-        $expected = self::PREPEND_RULES . "padding-top: 1px !important;\npadding-#{\$direction_end}: 2% !important;\npadding-bottom: 3px !important;\npadding-#{\$direction_start}: 4rem !important;\n";
-        $this->assertEquals($expected, $cp->process($contents));
+        static::assertResults('margin:1px 2% 3px 4rem;', 'margin-top: 1px ; margin-#{$direction_end}: 2% ; margin-bottom: 3px ; margin-#{$direction_start}: 4rem ;');
 
-        // margin
+        static::assertResults('margin:1px function(2+5*3, 23) $var 4rem !important;', 'margin-top: 1px !important; margin-#{$direction_end}: function(2+5*3, 23) !important; margin-bottom: $var !important; margin-#{$direction_start}: 4rem !important;');
 
-        $this->assertEquals(self::PREPEND_RULES . 'margin:1px;', $cp->process('margin:1px;'));
+        static::assertResults('border-radius:1px;', 'border-radius:1px;');
 
-        $this->assertEquals(self::PREPEND_RULES . 'margin:1px 2px;', $cp->process('margin:1px 2px;'));
+        static::assertResults('border-radius:1px 2px;', 'border-radius:1px 2px;');
 
-        $this->assertEquals(self::PREPEND_RULES . 'margin:1px 2px 3px;', $cp->process('margin:1px 2px 3px;'));
+        static::assertResults('border-radius:1px 2px 3px;', 'border-radius:1px 2px 3px;');
 
+        static::assertResults('border-radius:1px 2% 3px 4rem;', 'border-top-#{$direction_start}-radius: 1px ; border-top-#{$direction_end}-radius: 2% ; border-bottom-#{$direction_end}-radius: 3px ; border-bottom-#{$direction_start}-radius: 4rem ;');
 
-        $contents = 'margin:1px 2% 3px 4rem;';
-        $expected = self::PREPEND_RULES . "margin-top: 1px ;\nmargin-#{\$direction_end}: 2% ;\nmargin-bottom: 3px ;\nmargin-#{\$direction_start}: 4rem ;\n";
-        $this->assertEquals($expected, $cp->process($contents));
-
-        $contents = 'margin:1px function(2+5*3, 23) $var 4rem !important;';
-        $expected = self::PREPEND_RULES . "margin-top: 1px !important;\nmargin-#{\$direction_end}: function(2+5*3, 23) !important;\nmargin-bottom: \$var !important;\nmargin-#{\$direction_start}: 4rem !important;\n";
-        $this->assertEquals($expected, $cp->process($contents));
-
-        // border-radius
-
-        $this->assertEquals(self::PREPEND_RULES . 'border-radius:1px;', $cp->process('border-radius:1px;'));
-
-        $this->assertEquals(self::PREPEND_RULES . 'border-radius:1px 2px;', $cp->process('border-radius:1px 2px;'));
-
-        $this->assertEquals(self::PREPEND_RULES . 'border-radius:1px 2px 3px;', $cp->process('border-radius:1px 2px 3px;'));
-
-
-        $contents = 'border-radius:1px 2% 3px 4rem;';
-        $expected = self::PREPEND_RULES . "border-top-#{\$direction_start}-radius: 1px ;\nborder-top-#{\$direction_end}-radius: 2% ;\nborder-bottom-#{\$direction_end}-radius: 3px ;\nborder-bottom-#{\$direction_start}-radius: 4rem ;\n";
-        $this->assertEquals($expected, $cp->process($contents));
-
-        $contents = 'border-radius:1px 2% 3px 4rem !important;';
-        $expected = self::PREPEND_RULES . "border-top-#{\$direction_start}-radius: 1px !important;\nborder-top-#{\$direction_end}-radius: 2% !important;\nborder-bottom-#{\$direction_end}-radius: 3px !important;\nborder-bottom-#{\$direction_start}-radius: 4rem !important;\n";
-        $this->assertEquals($expected, $cp->process($contents));
-
+        static::assertResults('border-radius:1px 2% 3px 4rem !important;', 'border-top-#{$direction_start}-radius: 1px !important; border-top-#{$direction_end}-radius: 2% !important; border-bottom-#{$direction_end}-radius: 3px !important; border-bottom-#{$direction_start}-radius: 4rem !important;');
     }
 
     public function testTransformDirection()
     {
+        static::assertResults('body { dir:ltr; }', 'body { dir:#{$direction}; }');
 
-        $cp = new LiquidSassProcessor();
+        static::assertResults('body { dir:rtl; }', 'body { dir:#{$direction_upside}; }');
 
-        $this->assertEquals(self::PREPEND_RULES . 'body { dir:#{$direction}; }', $cp->process('body { dir:ltr; }'));
-        $this->assertEquals(self::PREPEND_RULES . 'body { dir:#{$direction_upside}; }', $cp->process('body { dir:rtl; }'));
+        static::assertResults('body[dir="ltr"] {...}', 'body[dir="#{$direction}"] {...}');
 
-        $this->assertEquals(self::PREPEND_RULES . 'body[dir="#{$direction}"] {...}', $cp->process('body[dir="ltr"] {...}'));
-        $this->assertEquals(self::PREPEND_RULES . 'body[dir="#{$direction_upside}"]', $cp->process('body[dir="rtl"]'));
+        static::assertResults('body[dir="rtl"]', 'body[dir="#{$direction_upside}"]');
 
-        $this->assertEquals(self::PREPEND_RULES . 'wordwith:ltrinit;', $cp->process('wordwith:ltrinit;'));
-        $this->assertEquals(self::PREPEND_RULES . 'wordwithrtlinit', $cp->process('wordwithrtlinit'));
+        static::assertResults('wordwith:ltrinit;', 'wordwith:ltrinit;');
 
+        static::assertResults('wordwithrtlinit', 'wordwithrtlinit');
     }
 
     public function testTransformAngles()
     {
+        static::assertResults('translate(-1px,5px)', 'translate(#{$direction_upside_angle}1px,5px)');
 
-        $cp = new LiquidSassProcessor();
+        static::assertResults('translate ( 12% , 5px )', 'translate ( #{$direction_angle}12% , 5px )');
 
-        $this->assertEquals(self::PREPEND_RULES . 'translate(#{$direction_angle}*-1px,5px)', $cp->process('translate(-1px,5px)'));
-        $this->assertEquals(self::PREPEND_RULES . "translate \n( #{\$direction_angle}*12% , 5px )", $cp->process("translate \n( 12% , 5px )"));
-        $this->assertEquals(self::PREPEND_RULES . 'translate ( #{$direction_angle}*+12% , -5px )', $cp->process('translate ( +12% , -5px )'));
-        $this->assertEquals(self::PREPEND_RULES . 'translate ( #{$direction_angle}*function(1+5) , -5px )', $cp->process('translate ( function(1+5) , -5px )'));
+        static::assertResults('translate ( +12% , -5px )', 'translate ( #{$direction_angle}12% , -5px )');
 
-        $this->assertEquals(self::PREPEND_RULES . 'translateX(#{$direction_angle}*-1px)', $cp->process('translateX(-1px)'));
-        $this->assertEquals(self::PREPEND_RULES . 'translateX(#{$direction_angle}*-1%)', $cp->process('translateX(-1%)'));
-        $this->assertEquals(self::PREPEND_RULES . 'translateX(#{$direction_angle}*1rem)', $cp->process('translateX(1rem)'));
-        $this->assertEquals(self::PREPEND_RULES . 'translateX(#{$direction_angle}*1%)', $cp->process('translateX(1%)'));
-        $this->assertEquals(self::PREPEND_RULES . 'translateX(#{$direction_angle}*function())', $cp->process('translateX(function())'));
+        static::assertResults('translateX(-1px)', 'translateX(#{$direction_upside_angle}1px)');
 
-        $this->assertEquals(self::PREPEND_RULES . 'translate3d(#{$direction_angle}*-1px,5px,1%)', $cp->process('translate3d(-1px,5px,1%)'));
-        $this->assertEquals(self::PREPEND_RULES . 'translate3d(#{$direction_angle}*1px,5px,1%)', $cp->process('translate3d(1px,5px,1%)'));
-        $this->assertEquals(self::PREPEND_RULES . 'translate3d(#{$direction_angle}*+1px,5px,1%)', $cp->process('translate3d(+1px,5px,1%)'));
-        $this->assertEquals(self::PREPEND_RULES . 'translate3d(#{$direction_angle}*1-function()*3,5px,function2())', $cp->process('translate3d(1-function()*3,5px,function2())'));
+        static::assertResults('translateX(-1%)', 'translateX(#{$direction_upside_angle}1%)');
+
+        static::assertResults('translateX(1rem)', 'translateX(#{$direction_angle}1rem)');
+
+        static::assertResults('translateX(1%)', 'translateX(#{$direction_angle}1%)');
+
+        static::assertResults('translate3d(-1px,5px,1%)', 'translate3d(#{$direction_upside_angle}1px,5px,1%)');
+
+        static::assertResults('translate3d(1px,5px,1%)', 'translate3d(#{$direction_angle}1px,5px,1%)');
+
+        static::assertResults('translate3d(+1px,5px,1%)', 'translate3d(#{$direction_angle}1px,5px,1%)');
     }
 
     public function testTransformRules()
     {
+        static::assertResults('body {float:left;}', 'body {float:#{$direction_start};}');
 
-        $cp = new LiquidSassProcessor();
+        static::assertResults('body {float:right;}', 'body {float:#{$direction_end};}');
 
-        $this->assertEquals(self::PREPEND_RULES . 'body {float:#{$direction_start};}', $cp->process('body {float:left;}'));
-        $this->assertEquals(self::PREPEND_RULES . 'body {float:#{$direction_end};}', $cp->process('body {float:right;}'));
+        static::assertResults('.left {float:left;}', '.left {float:#{$direction_start};}');
 
-        $this->assertEquals(self::PREPEND_RULES . '.left {float:#{$direction_start};}', $cp->process('.left {float:left;}'));
-        $this->assertEquals(self::PREPEND_RULES . '.right {float:#{$direction_end};}', $cp->process('.right {float:right;}'));
+        static::assertResults('.right {float:right;}', '.right {float:#{$direction_end};}');
 
-        $this->assertEquals(self::PREPEND_RULES . '.left-body {#{$direction_start}:$left;}', $cp->process('.left-body {left:$left;}'));
-        $this->assertEquals(self::PREPEND_RULES . '.right-body {  #{$direction_end}  :  $right ; }', $cp->process('.right-body {  right  :  $right ; }'));
+        static::assertResults('.left-body {left:$left;}', '.left-body {#{$direction_start}:$left;}');
 
-    }
-
-
-    public function testPrependRules()
-    {
-        $this->assertEquals(self::PREPEND_RULES, (new LiquidSassProcessor())->process(''));
+        static::assertResults('.right-body {  right  :  $right ; }', '.right-body {  #{$direction_end}  :  $right ; }');
     }
 }
