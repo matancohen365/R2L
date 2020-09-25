@@ -52,9 +52,9 @@ class CSSProcessor implements ProcessorInterface
 
             $rule = preg_replace('/\s*!important\s*?/ixu', '', trim($matches['rule']), 1, $important);
 
-            $ruleSet = preg_split('/\s/ixu', $rule, 4, PREG_SPLIT_NO_EMPTY);
+            $ruleSet = $this->parseRuleSet($rule);
 
-            if(count($ruleSet) <= 3) {
+            if (count($ruleSet) <= 3) {
                 return sprintf('%s:%s', $matches['property'], $matches['rule']);
             }
 
@@ -62,9 +62,9 @@ class CSSProcessor implements ProcessorInterface
                 ? sprintf(static::BORDER_RADIUS_FORMAT, static::DIRECTION_START, static::DIRECTION_END)
                 : sprintf(static::MARGIN_PADDING_FORMAT, $matches['property'], static::DIRECTION_START, static::DIRECTION_END);
 
-            return sprintf($format, ...array_map(function($rule) use ($important) {
+            return sprintf($format, ...array_map(function ($rule) use ($important) {
 
-                if($important === 1) {
+                if ($important === 1) {
 
                     $rule = $rule . ' !important';
 
@@ -72,7 +72,7 @@ class CSSProcessor implements ProcessorInterface
 
                 return $rule;
 
-            }, $this->parseRuleSet($rule)));
+            }, $ruleSet));
 
         }, $contents);
     }
@@ -85,22 +85,21 @@ class CSSProcessor implements ProcessorInterface
     {
         $ruleSet = [];
 
-        for ($i = 0; $i < 3; $i++) {
+        while (strlen($rule) > 0) {
 
-            $ruleSet[$i] = substr($rule, 0, strpos($rule, ' '));
+            $value = '';
 
-            while (substr_count($ruleSet[$i], '(',) !== substr_count($ruleSet[$i], ')',)) {
-                $ruleSet[$i] = substr($rule, 0, strpos($rule, ' ', strlen($ruleSet[$i]) + 1));
+            while (strlen($value) !== strlen($rule) &&
+                (substr_count($value, '(',) !== substr_count($value, ')',) || substr($value, -1) !== ' ')) {
+                $value = substr($rule, 0, strlen($value) + 1);
             }
 
-            $rule = substr($rule, strlen($ruleSet[$i]) + 1);
+            $rule = substr($rule, strlen($value));
 
+            $ruleSet[] = trim($value);
         }
 
-        $ruleSet[4] = $rule;
-
         return $ruleSet;
-
     }
 
     protected function processDirection(string $contents): string

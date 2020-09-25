@@ -55,6 +55,8 @@ class LiquidSassProcessorTest extends AbstractProcessorTest
 
         static::assertResults('border-radius:1px 2% 3px 4rem !important;',
             'border-top-#{$direction_start}-radius: 1px !important; border-top-#{$direction_end}-radius: 2% !important; border-bottom-#{$direction_end}-radius: 3px !important; border-bottom-#{$direction_start}-radius: 4rem !important;');
+
+        static::assertResults('margin: 0 ($gutter / 4) ($gutter / 4);', 'margin:0 ($gutter / 4) ($gutter / 4);');
     }
 
     public function testTransformDirection()
