@@ -94,7 +94,7 @@ body {
     protected function processValues(string $contents): string
     {
         return preg_replace_callback(
-            static::PROPERTY_VALUE_PATTERN,
+            static::PROPERTY_RULE_PATTERN,
             function ($matches) {
                 return str_ireplace(
                     [static::DIRECTION_START, static::DIRECTION_END,],

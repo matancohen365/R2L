@@ -14,27 +14,17 @@ class CSSProcessor implements ProcessorInterface
 
     const TRANSLATE_PATTERN = '#(?P<function>translate(|X|3d)\s*\(\s*)(?P<argument>[^\s])#ixuU';
 
-    const VALUE_PATTERN = '[a-z0-9_\-\.\%\$]+|.+\(.+\)';
-
     const DIRECTION_PATTERN = '#\b(rtl|ltr)\b#ixu';
 
-    const PROPERTY_VALUE_PATTERN = '#\b(' . self::DIRECTION_END . '|' . self::DIRECTION_START . ')[^{]*[:;]#ixuU';
+    const PROPERTY_RULE_PATTERN = '#\b(' . self::DIRECTION_END . '|' . self::DIRECTION_START . ')[^{]*[:;]#ixuU';
 
-    const MARGIN_PADDING_PATTERN =
-        "#(margin|padding)\s*:\s*(" . self::VALUE_PATTERN . ")\s+(" . self::VALUE_PATTERN .
-        ")\s+(" . self::VALUE_PATTERN . ")\s+(" . self::VALUE_PATTERN . ")\s*(!important)*\s*;?#ixu";
+    const PROPERTY_RULES_SET_PATTERN = "#(?P<property>margin|padding|border-radius)\s*:\s*(?P<rule>[^;}]+)#ixu";
 
-    const BORDER_RADIUS_PATTERN =
-        "#border-radius\s*:\s*(" . self::VALUE_PATTERN . ")\s+(" . self::VALUE_PATTERN . ")\s+("
-        . self::VALUE_PATTERN . ")\s+(" . self::VALUE_PATTERN . ")\s*(!important)*\s*;*#ixu";
+    const MARGIN_PADDING_FORMAT = '%1$s-top: %%s; %1$s-%2$s: %%s; %1$s-bottom: %%s; %1$s-%3$s: %%s';
+
+    const BORDER_RADIUS_FORMAT = 'border-top-%2$s-radius: %%s; border-top-%1$s-radius: %%s; border-bottom-%1$s-radius: %%s; border-bottom-%2$s-radius: %%s';
 
     const TEMP_REPLACEMENT = '4D63EC1AA4C';
-
-    const BORDER_RADIUS_REPLACEMENT =
-        "border-top-left-radius: \\1 \\5; border-top-right-radius: \\2 \\5; " .
-        "border-bottom-right-radius: \\3 \\5; border-bottom-left-radius: \\4 \\5;";
-
-    const MARGIN_PADDING_REPLACEMENT = "\\1-top: \\2 \\6; \\1-right: \\3 \\6; \\1-bottom: \\4 \\6; \\1-left: \\5 \\6;";
 
     const PREPEND_PROPERTIES = "body { direction: " . self::DIRECTION . " ; }" . PHP_EOL;
 
@@ -58,11 +48,59 @@ class CSSProcessor implements ProcessorInterface
 
     protected function processMarginPaddingBorders(string $contents): string
     {
-        return preg_replace(
-            [static::MARGIN_PADDING_PATTERN, static::BORDER_RADIUS_PATTERN,],
-            [static::MARGIN_PADDING_REPLACEMENT, static::BORDER_RADIUS_REPLACEMENT,],
-            $contents
-        );
+        return preg_replace_callback(static::PROPERTY_RULES_SET_PATTERN, function ($matches) {
+
+            $rule = preg_replace('/\s*!important\s*?/ixu', '', trim($matches['rule']), 1, $important);
+
+            $ruleSet = preg_split('/\s/ixu', $rule, 4, PREG_SPLIT_NO_EMPTY);
+
+            if(count($ruleSet) <= 3) {
+                return sprintf('%s:%s', $matches['property'], $matches['rule']);
+            }
+
+            $format = $matches['property'] === 'border-radius'
+                ? sprintf(static::BORDER_RADIUS_FORMAT, static::DIRECTION_START, static::DIRECTION_END)
+                : sprintf(static::MARGIN_PADDING_FORMAT, $matches['property'], static::DIRECTION_START, static::DIRECTION_END);
+
+            return sprintf($format, ...array_map(function($rule) use ($important) {
+
+                if($important === 1) {
+
+                    $rule = $rule . ' !important';
+
+                }
+
+                return $rule;
+
+            }, $this->parseRuleSet($rule)));
+
+        }, $contents);
+    }
+
+    /**
+     * @param string $rule
+     * @return array
+     */
+    private function parseRuleSet(string $rule): array
+    {
+        $ruleSet = [];
+
+        for ($i = 0; $i < 3; $i++) {
+
+            $ruleSet[$i] = substr($rule, 0, strpos($rule, ' '));
+
+            while (substr_count($ruleSet[$i], '(',) !== substr_count($ruleSet[$i], ')',)) {
+                $ruleSet[$i] = substr($rule, 0, strpos($rule, ' ', strlen($ruleSet[$i]) + 1));
+            }
+
+            $rule = substr($rule, strlen($ruleSet[$i]) + 1);
+
+        }
+
+        $ruleSet[4] = $rule;
+
+        return $ruleSet;
+
     }
 
     protected function processDirection(string $contents): string
@@ -108,7 +146,7 @@ class CSSProcessor implements ProcessorInterface
     protected function processValues(string $contents): string
     {
         return preg_replace_callback(
-            static::PROPERTY_VALUE_PATTERN,
+            static::PROPERTY_RULE_PATTERN,
             function ($matches) {
                 return str_ireplace(
                     [static::DIRECTION_START, static::DIRECTION_END, static::TEMP_REPLACEMENT,],

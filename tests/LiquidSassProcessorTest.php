@@ -20,9 +20,17 @@ class LiquidSassProcessorTest extends AbstractProcessorTest
 
         static::assertResults('padding:1px 2px 3px;', 'padding:1px 2px 3px;');
 
-        static::assertResults('padding:1px 2% 3px 4rem;', 'padding-top: 1px ; padding-#{$direction_end}: 2% ; padding-bottom: 3px ; padding-#{$direction_start}: 4rem ;');
+        static::assertResults('padding:1px 2% 3px 4rem;',
+            'padding-top: 1px; padding-#{$direction_end}: 2%; padding-bottom: 3px; padding-#{$direction_start}: 4rem;');
 
-        static::assertResults('padding:1px 2% 3px 4rem !important;', 'padding-top: 1px !important; padding-#{$direction_end}: 2% !important; padding-bottom: 3px !important; padding-#{$direction_start}: 4rem !important;');
+        static::assertResults('padding:1px 2% 3px 4rem !important;',
+            'padding-top: 1px !important; padding-#{$direction_end}: 2% !important; padding-bottom: 3px !important; padding-#{$direction_start}: 4rem !important;');
+
+        static::assertResults('padding: ($A) ($B) ($C) (($D) - $D2);',
+            'padding-top: ($A); padding-#{$direction_end}: ($B); padding-bottom: ($C); padding-#{$direction_start}: (($D) - $D2);');
+
+        static::assertResults('padding: ($A) ($B) ($C) (($D) - $D2) !important;',
+            'padding-top: ($A) !important; padding-#{$direction_end}: ($B) !important; padding-bottom: ($C) !important; padding-#{$direction_start}: (($D) - $D2) !important;');
 
         static::assertResults('margin:1px;', 'margin:1px;');
 
@@ -30,9 +38,11 @@ class LiquidSassProcessorTest extends AbstractProcessorTest
 
         static::assertResults('margin:1px 2px 3px;', 'margin:1px 2px 3px;');
 
-        static::assertResults('margin:1px 2% 3px 4rem;', 'margin-top: 1px ; margin-#{$direction_end}: 2% ; margin-bottom: 3px ; margin-#{$direction_start}: 4rem ;');
+        static::assertResults('margin:1px 2% 3px 4rem;',
+            'margin-top: 1px; margin-#{$direction_end}: 2%; margin-bottom: 3px; margin-#{$direction_start}: 4rem;');
 
-        static::assertResults('margin:1px function(2+5*3, 23) $var 4rem !important;', 'margin-top: 1px !important; margin-#{$direction_end}: function(2+5*3, 23) !important; margin-bottom: $var !important; margin-#{$direction_start}: 4rem !important;');
+        static::assertResults('margin:1px function(2+5*3, 23) $var 4rem !important;',
+            'margin-top: 1px !important; margin-#{$direction_end}: function(2+5*3, 23) !important; margin-bottom: $var !important; margin-#{$direction_start}: 4rem !important;');
 
         static::assertResults('border-radius:1px;', 'border-radius:1px;');
 
@@ -40,9 +50,11 @@ class LiquidSassProcessorTest extends AbstractProcessorTest
 
         static::assertResults('border-radius:1px 2px 3px;', 'border-radius:1px 2px 3px;');
 
-        static::assertResults('border-radius:1px 2% 3px 4rem;', 'border-top-#{$direction_start}-radius: 1px ; border-top-#{$direction_end}-radius: 2% ; border-bottom-#{$direction_end}-radius: 3px ; border-bottom-#{$direction_start}-radius: 4rem ;');
+        static::assertResults('border-radius:1px 2% 3px 4rem;',
+            'border-top-#{$direction_start}-radius: 1px; border-top-#{$direction_end}-radius: 2%; border-bottom-#{$direction_end}-radius: 3px; border-bottom-#{$direction_start}-radius: 4rem;');
 
-        static::assertResults('border-radius:1px 2% 3px 4rem !important;', 'border-top-#{$direction_start}-radius: 1px !important; border-top-#{$direction_end}-radius: 2% !important; border-bottom-#{$direction_end}-radius: 3px !important; border-bottom-#{$direction_start}-radius: 4rem !important;');
+        static::assertResults('border-radius:1px 2% 3px 4rem !important;',
+            'border-top-#{$direction_start}-radius: 1px !important; border-top-#{$direction_end}-radius: 2% !important; border-bottom-#{$direction_end}-radius: 3px !important; border-bottom-#{$direction_start}-radius: 4rem !important;');
     }
 
     public function testTransformDirection()
@@ -95,6 +107,6 @@ class LiquidSassProcessorTest extends AbstractProcessorTest
 
         static::assertResults('.left-body {left:$left;}', '.left-body {#{$direction_start}:$left;}');
 
-        static::assertResults('.right-body {  right  :  $right ; }', '.right-body {  #{$direction_end}  :  $right ; }');
+        static::assertResults('.right-body {  right  :  $right; }', '.right-body {  #{$direction_end}  :  $right; }');
     }
 }
