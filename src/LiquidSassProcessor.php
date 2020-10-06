@@ -18,9 +18,13 @@ class LiquidSassProcessor extends CSSProcessor
 
     const VARS_PATTERN = '#\$[a-z0-9_-]+#ixu';
 
+    const NUMERIC_OPERATORS_PATTERN = '#\s+[\*\-\+\/\%]\s+#ixu';
+
     const TEMP_START_REPLACEMENT = '24020DF9233';
 
     const TEMP_END_REPLACEMENT = 'C5DE7B08D23';
+
+    const TEMP_SPACE_REPLACEMENT = 'GERT12E1S2A';
 
     const PREPEND_PROPERTIES = '$direction: rtl;
 $direction_upside: ltr;
@@ -41,20 +45,34 @@ body {
 	direction: $direction;
 }' . PHP_EOL;
 
+    const SPACE = ' ';
+
     public function process(string $contents): string
     {
-        $contents = $this->encryptVars($contents);
+        $contents = $this->encryptOperators($contents);
 
         $contents = parent::process($contents);
 
-        $contents = $this->decryptVars($contents);
+        $contents = $this->decryptOperators($contents);
 
         return $contents;
     }
 
-    protected function encryptVars(string $contents): string
+    protected function encryptOperators(string $contents): string
     {
-        return preg_replace_callback(
+        $contents = preg_replace_callback(
+            static::NUMERIC_OPERATORS_PATTERN,
+            function ($matches) {
+                return str_ireplace(
+                    [static::SPACE],
+                    [static::TEMP_SPACE_REPLACEMENT],
+                    $matches[0],
+                );
+            },
+            $contents
+        );
+
+        $contents = preg_replace_callback(
             static::VARS_PATTERN,
             function ($matches) {
                 return str_ireplace(
@@ -65,13 +83,15 @@ body {
             },
             $contents
         );
+
+        return $contents;
     }
 
-    protected function decryptVars(string $contents): string
+    protected function decryptOperators(string $contents): string
     {
         return str_ireplace(
-            [static::TEMP_END_REPLACEMENT, static::TEMP_START_REPLACEMENT,],
-            [static::DIRECTION_END, static::DIRECTION_START,],
+            [static::TEMP_SPACE_REPLACEMENT, static::TEMP_END_REPLACEMENT, static::TEMP_START_REPLACEMENT,],
+            [static::SPACE, static::DIRECTION_END, static::DIRECTION_START,],
             $contents
         );
     }
