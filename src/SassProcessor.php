@@ -1,8 +1,8 @@
 <?php
 
-namespace AutoRTL;
+namespace R2L;
 
-class LiquidSassProcessor extends CSSProcessor
+class SassProcessor extends CSSProcessor
 {
     const DIRECTION_VAR_NAME = '#{$direction}';
 
@@ -26,7 +26,7 @@ class LiquidSassProcessor extends CSSProcessor
 
     const TEMP_SPACE_REPLACEMENT = 'GERT12E1S2A';
 
-    const PREPEND_PROPERTIES = '$direction: rtl;
+    const DEFAULT_PROPERTIES = '$direction: rtl;
 $direction_upside: ltr;
 $direction_angle: \'-\';
 $direction_upside_angle: \'+\';
@@ -47,18 +47,34 @@ body {
 
     const SPACE = ' ';
 
+    /**
+     * CSSProcessor constructor.
+     * @param string $properties
+     */
+    public function __construct(string $properties = self::DEFAULT_PROPERTIES)
+    {
+        parent::__construct($properties);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function process(string $contents): string
     {
-        $contents = $this->encryptOperators($contents);
+        $contents = $this->mask($contents);
 
         $contents = parent::process($contents);
 
-        $contents = $this->decryptOperators($contents);
+        $contents = $this->unmask($contents);
 
         return $contents;
     }
 
-    protected function encryptOperators(string $contents): string
+    /**
+     * @param string $contents
+     * @return string
+     */
+    protected function mask(string $contents): string
     {
         $contents = preg_replace_callback(
             static::NUMERIC_OPERATORS_PATTERN,
@@ -87,7 +103,11 @@ body {
         return $contents;
     }
 
-    protected function decryptOperators(string $contents): string
+    /**
+     * @param string $contents
+     * @return string
+     */
+    protected function unmask(string $contents): string
     {
         return str_ireplace(
             [static::TEMP_SPACE_REPLACEMENT, static::TEMP_END_REPLACEMENT, static::TEMP_START_REPLACEMENT,],
@@ -96,6 +116,10 @@ body {
         );
     }
 
+    /**
+     * @param string $contents
+     * @return string
+     */
     protected function processDirection(string $contents): string
     {
         return preg_replace_callback(
@@ -111,6 +135,10 @@ body {
         );
     }
 
+    /**
+     * @param string $contents
+     * @return string
+     */
     protected function processValues(string $contents): string
     {
         return preg_replace_callback(

@@ -1,18 +1,16 @@
 <?php
 
-namespace AutoRTL;
+namespace R2L;
 
-require_once 'AbstractProcessorTest.php';
-
-class LiquidSassProcessorTest extends AbstractProcessorTest
+class SassProcessorTest extends AbstractProcessorTest
 {
 
     static public function getProcessor(): ProcessorInterface
     {
-        return new LiquidSassProcessor();
+        return new SassProcessor('');
     }
 
-    public function testTransformMarginPaddingBorders()
+    public function testMarginPaddingAndBordersProcessed()
     {
         static::assertResults('padding:1px;', 'padding:1px;');
 
@@ -63,7 +61,7 @@ class LiquidSassProcessorTest extends AbstractProcessorTest
         static::assertResults('padding:1px $var*1 1% 1rem;', 'padding-top: 1px; padding-#{$direction_end}: $var*1; padding-bottom: 1%; padding-#{$direction_start}: 1rem;');
     }
 
-    public function testTransformDirection()
+    public function testDirectionsProcessed()
     {
         static::assertResults('body { dir:ltr; }', 'body { dir:#{$direction}; }');
 
@@ -78,7 +76,7 @@ class LiquidSassProcessorTest extends AbstractProcessorTest
         static::assertResults('wordwithrtlinit', 'wordwithrtlinit');
     }
 
-    public function testTransformAngles()
+    public function testAnglesProcessed()
     {
         static::assertResults('translate(-1px,5px)', 'translate(#{$direction_upside_angle}1px,5px)');
 
@@ -101,7 +99,7 @@ class LiquidSassProcessorTest extends AbstractProcessorTest
         static::assertResults('translate3d(+1px,5px,1%)', 'translate3d(#{$direction_angle}1px,5px,1%)');
     }
 
-    public function testTransformRules()
+    public function testRulesProcessed()
     {
         static::assertResults('body {float:left;}', 'body {float:#{$direction_start};}');
 

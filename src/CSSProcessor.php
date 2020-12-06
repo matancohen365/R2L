@@ -1,6 +1,6 @@
 <?php
 
-namespace AutoRTL;
+namespace R2L;
 
 class CSSProcessor implements ProcessorInterface
 {
@@ -26,11 +26,26 @@ class CSSProcessor implements ProcessorInterface
 
     const TEMP_REPLACEMENT = '4D63EC1AA4C';
 
-    const PREPEND_PROPERTIES = "body { direction: " . self::DIRECTION . " ; }" . PHP_EOL;
+    const DEFAULT_PROPERTIES = "body { direction: " . self::DIRECTION . " ; }" . PHP_EOL;
 
     const DIRECTION_ANGLE = '-';
+
     const DIRECTION_UPSIDE_ANGLE = '+';
 
+    protected string $properties = '';
+
+    /**
+     * CSSProcessor constructor.
+     * @param string $properties
+     */
+    public function __construct(string $properties = self::DEFAULT_PROPERTIES)
+    {
+        $this->properties = $properties;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function process(string $contents): string
     {
         $contents = $this->processMarginPaddingBorders($contents);
@@ -46,6 +61,10 @@ class CSSProcessor implements ProcessorInterface
         return $contents;
     }
 
+    /**
+     * @param string $contents
+     * @return string
+     */
     protected function processMarginPaddingBorders(string $contents): string
     {
         return preg_replace_callback(static::PROPERTY_RULES_SET_PATTERN, function ($matches) {
@@ -102,6 +121,10 @@ class CSSProcessor implements ProcessorInterface
         return $ruleSet;
     }
 
+    /**
+     * @param string $contents
+     * @return string
+     */
     protected function processDirection(string $contents): string
     {
         return preg_replace_callback(
@@ -117,6 +140,10 @@ class CSSProcessor implements ProcessorInterface
         );
     }
 
+    /**
+     * @param string $contents
+     * @return string
+     */
     protected function processAngles(string $contents): string
     {
         return preg_replace_callback(static::TRANSLATE_PATTERN, function ($matches) {
@@ -142,6 +169,10 @@ class CSSProcessor implements ProcessorInterface
         }, $contents);
     }
 
+    /**
+     * @param string $contents
+     * @return string
+     */
     protected function processValues(string $contents): string
     {
         return preg_replace_callback(
@@ -158,9 +189,21 @@ class CSSProcessor implements ProcessorInterface
 
     }
 
+    /**
+     * @param string $contents
+     * @return string
+     */
     protected function prependProperties(string $contents): string
     {
-        return static::PREPEND_PROPERTIES . $contents;
+        return $this->getProperties() . $contents;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProperties(): string
+    {
+        return $this->properties;
     }
 
 }

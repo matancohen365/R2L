@@ -1,7 +1,7 @@
 
-### Auto RTL
+### R2L (RTL TO LTR)
 
-Simple class to rtl your themes
+right-to-left your left-to-right assets in a push of a button
 
 ### 🍕 How to use?
 
@@ -11,7 +11,7 @@ Simple class to rtl your themes
 
 <?php
 
-use AutoRTL\CSSProcessor;
+use R2L\CSSProcessor;
 
 require __DIR__ . '/vendor/autoload.php';  
   
@@ -31,11 +31,12 @@ file_put_contents('path/to/theme.rtl.css', $RTLContents);
 
 <?php
 
-use AutoRTL\LiquidSassProcessor;
+use R2L\LiquidProcessor;
+use R2L\SassProcessor;
 
 require __DIR__ . '/vendor/autoload.php';  
   
-$processor = new LiquidSassProcessor();
+$processor = new LiquidProcessor(new SassProcessor());
   
 $contents = file_get_contents('path/to/theme.liquid.sass');  
   
@@ -45,12 +46,11 @@ file_put_contents('path/to/theme.rtl.liquid.sass', $RTLContents);
 
 ```
 
+### TODO
+ - Better Tests.
+ 
 ### 🙋️ Questions? Need some help? 
- - matan.cohen.365@gmail.com
-
-### ☕  Buy me a coffee 
-
- - [Donate via PayPal](https://bit.ly/3171pMx)
+ - matancohen365@gmail.com
  
 🆓 License
 ----

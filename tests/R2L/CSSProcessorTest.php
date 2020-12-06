@@ -1,18 +1,16 @@
 <?php
 
-namespace AutoRTL;
-
-require_once 'AbstractProcessorTest.php';
+namespace R2L;
 
 class CSSProcessorTest extends AbstractProcessorTest
 {
 
     static public function getProcessor(): ProcessorInterface
     {
-        return new CSSProcessor();
+        return new CSSProcessor('');
     }
 
-    public function testTransformMarginPaddingBorders()
+    public function testMarginPaddingAndBordersProcessed()
     {
         static::assertResults('padding:1px;', 'padding:1px;');
 
@@ -49,7 +47,7 @@ class CSSProcessorTest extends AbstractProcessorTest
         static::assertResults('.custom-file-label::after { border-radius: 0 .25rem .25rem 0 !important }', '.custom-file-label::after { border-top-right-radius: 0 !important; border-top-left-radius: .25rem !important; border-bottom-left-radius: .25rem !important; border-bottom-right-radius: 0 !important}');
     }
 
-    public function testTransformDirection()
+    public function testDirectionsProcessed()
     {
         static::assertResults('dir:ltr;', 'dir:rtl;');
 
@@ -64,7 +62,7 @@ class CSSProcessorTest extends AbstractProcessorTest
         static::assertResults('wordwithrtlinit', 'wordwithrtlinit');
     }
 
-    public function testTransformAngles()
+    public function testAnglesProcessed()
     {
         static::assertResults('translate(-1px,5px)', 'translate(+1px,5px)');
 
@@ -87,7 +85,7 @@ class CSSProcessorTest extends AbstractProcessorTest
         static::assertResults('translate3d(+1px,5px,1%)', 'translate3d(-1px,5px,1%)');
     }
 
-    public function testTransformRules()
+    public function testRulesProcessed()
     {
         static::assertResults('left:0px;', 'right:0px;');
 

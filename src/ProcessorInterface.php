@@ -1,10 +1,9 @@
 <?php
 
-namespace AutoRTL;
+namespace R2L;
 
 interface ProcessorInterface
 {
-
     /**
      * Process the giving contents
      *
