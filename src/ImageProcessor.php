@@ -27,6 +27,6 @@ class ImageProcessor implements ProcessorInterface
      */
     public function process(string $contents): string
     {
-        return base64_encode((new ImageManager())->make($contents)->flip()->encode($this->contentType));
+        return (new ImageManager())->make($contents)->flip()->encode($this->contentType);
     }
 }
