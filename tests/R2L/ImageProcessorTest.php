@@ -20,7 +20,7 @@ class ImageProcessorTest extends AbstractProcessorTest
 
         $contents = file_get_contents(__DIR__ . './../stubs/stub.png');
 
-        $result = base64_encode(file_get_contents(__DIR__ . './../stubs/stub.result.png'));
+        $result = file_get_contents(__DIR__ . './../stubs/stub.result.png');
 
         //
 
