@@ -2,6 +2,11 @@
 
 namespace R2L;
 
+/**
+ * Class ImageProcessorTest
+ *
+ * @package R2L
+ */
 class ImageProcessorTest extends AbstractProcessorTest
 {
     static public function getProcessor(): ProcessorInterface
@@ -11,20 +16,10 @@ class ImageProcessorTest extends AbstractProcessorTest
 
     public function testProcessing()
     {
-
-        //
-
-        $processor = new ImageProcessor();
-
-        //
-
         $contents = file_get_contents(__DIR__ . './../stubs/stub.png');
 
         $result = file_get_contents(__DIR__ . './../stubs/stub.result.png');
 
-        //
-
-        static::assertEquals(md5($processor->process($contents)), md5($result));
-
+        static::assertResults($contents, $result);
     }
 }

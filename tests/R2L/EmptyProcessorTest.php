@@ -2,6 +2,11 @@
 
 namespace R2L;
 
+/**
+ * Class EmptyProcessorTest
+ *
+ * @package R2L
+ */
 class EmptyProcessorTest extends AbstractProcessorTest
 {
     static public function getProcessor(): ProcessorInterface

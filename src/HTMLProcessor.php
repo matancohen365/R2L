@@ -2,8 +2,25 @@
 
 namespace R2L;
 
+/**
+ * Class HTMLProcessor
+ *
+ * @package R2L
+ */
 class HTMLProcessor implements ProcessorInterface
 {
+    protected CSSProcessor $styleProcessor;
+
+    /**
+     * HTMLProcessor constructor.
+     *
+     * @param CSSProcessor|null $styleProcessor
+     */
+    public function __construct(CSSProcessor $styleProcessor = null)
+    {
+        $this->styleProcessor = $styleProcessor ?? new CSSProcessor('');
+    }
+
     /**
      * @inheritdoc
      */
@@ -25,11 +42,19 @@ class HTMLProcessor implements ProcessorInterface
 
         $contents = preg_replace_callback(['/(<style[^>]*>)(.*)(<\/style>)/ixu', '/(style\s*=\s*[\'"])([^\'"]+)([\'"])/ixu'], function ($matches) {
 
-            return $matches[1] . (new CSSProcessor(''))->process($matches[2]) . $matches[3];
+            return $matches[1] . $this->getStyleProcessor()->process($matches[2]) . $matches[3];
 
         }, $contents);
 
 
         return $contents;
+    }
+
+    /**
+     * @return CSSProcessor
+     */
+    public function getStyleProcessor(): CSSProcessor
+    {
+        return $this->styleProcessor;
     }
 }

@@ -2,6 +2,11 @@
 
 namespace R2L;
 
+/**
+ * Class LiquidProcessorTest
+ *
+ * @package R2L
+ */
 class LiquidProcessorTest extends AbstractProcessorTest
 {
     public static function getProcessor(): ProcessorInterface

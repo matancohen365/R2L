@@ -2,6 +2,12 @@
 
 namespace R2L;
 
+/**
+ * Class SVGProcessor
+ *
+ * @package R2L
+ * @deprecated
+ */
 class SVGProcessor implements ProcessorInterface
 {
     /**

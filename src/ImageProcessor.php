@@ -4,6 +4,11 @@ namespace R2L;
 
 use Intervention\Image\ImageManager;
 
+/**
+ * Class ImageProcessor
+ *
+ * @package R2L
+ */
 class ImageProcessor implements ProcessorInterface
 {
     /**
@@ -27,6 +32,9 @@ class ImageProcessor implements ProcessorInterface
      */
     public function process(string $contents): string
     {
-        return (new ImageManager())->make($contents)->flip()->encode($this->contentType);
+        return (new ImageManager())
+            ->make($contents)
+            ->flip()
+            ->encode($this->contentType);
     }
 }

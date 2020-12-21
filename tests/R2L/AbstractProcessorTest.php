@@ -4,9 +4,13 @@ namespace R2L;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class AbstractProcessorTest
+ *
+ * @package R2L
+ */
 abstract class AbstractProcessorTest extends TestCase
 {
-
     public static function assertResults(string $contents, string $expected, ?string $message = '', ?ProcessorInterface $processor = null): void
     {
         $processor ??= static::getProcessor();

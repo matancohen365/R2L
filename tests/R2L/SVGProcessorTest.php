@@ -4,6 +4,12 @@ namespace R2L;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class SVGProcessorTest
+ *
+ * @package R2L
+ * @deprecated
+ */
 class SVGProcessorTest extends TestCase
 {
     public function testProcessing()

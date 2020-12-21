@@ -2,6 +2,11 @@
 
 namespace R2L;
 
+/**
+ * Interface ProcessorInterface
+ *
+ * @package R2L
+ */
 interface ProcessorInterface
 {
     /**

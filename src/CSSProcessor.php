@@ -2,6 +2,11 @@
 
 namespace R2L;
 
+/**
+ * Class CSSProcessor
+ *
+ * @package R2L
+ */
 class CSSProcessor implements ProcessorInterface
 {
     const DIRECTION = 'rtl';
@@ -18,7 +23,7 @@ class CSSProcessor implements ProcessorInterface
 
     const PROPERTY_RULE_PATTERN = '#\b(' . self::DIRECTION_END . '|' . self::DIRECTION_START . ')[^{]*[:;]#ixuU';
 
-    const PROPERTY_RULES_SET_PATTERN = "#(?P<property>margin|padding|border-radius)\s*:\s*(?P<rule>[^;}]+)#ixu";
+    const PROPERTY_RULES_SET_PATTERN = '#(?P<property>margin|padding|border-radius)\\s*:\\s*(?P<rule>[^;}]+)#ixu';
 
     const MARGIN_PADDING_FORMAT = '%1$s-top: %%s; %1$s-%2$s: %%s; %1$s-bottom: %%s; %1$s-%3$s: %%s';
 
@@ -26,7 +31,7 @@ class CSSProcessor implements ProcessorInterface
 
     const TEMP_REPLACEMENT = '4D63EC1AA4C';
 
-    const DEFAULT_PROPERTIES = "body { direction: " . self::DIRECTION . " ; }" . PHP_EOL;
+    const DEFAULT_PROPERTIES = 'body { direction: ' . self::DIRECTION . ' ; }' . PHP_EOL;
 
     const DIRECTION_ANGLE = '-';
 
@@ -150,11 +155,11 @@ class CSSProcessor implements ProcessorInterface
 
             switch (true) {
 
-                case $matches['argument'] === '-':
+                case $matches['argument'] === self::DIRECTION_ANGLE:
                     $prefix = static::DIRECTION_UPSIDE_ANGLE;
                     break;
 
-                case $matches['argument'] === '+':
+                case $matches['argument'] === self::DIRECTION_UPSIDE_ANGLE:
                     $prefix = static::DIRECTION_ANGLE;
                     break;
 
@@ -205,5 +210,4 @@ class CSSProcessor implements ProcessorInterface
     {
         return $this->properties;
     }
-
 }

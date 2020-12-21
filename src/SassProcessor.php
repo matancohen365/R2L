@@ -2,6 +2,11 @@
 
 namespace R2L;
 
+/**
+ * Class SassProcessor
+ *
+ * @package R2L
+ */
 class SassProcessor extends CSSProcessor
 {
     const DIRECTION_VAR_NAME = '#{$direction}';
@@ -153,5 +158,4 @@ body {
             $contents
         );
     }
-
 }

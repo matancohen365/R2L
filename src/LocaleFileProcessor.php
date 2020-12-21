@@ -2,6 +2,11 @@
 
 namespace R2L;
 
+/**
+ * Class LocaleFileProcessor
+ *
+ * @package R2L
+ */
 class LocaleFileProcessor implements ProcessorInterface
 {
     /**

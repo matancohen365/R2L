@@ -2,9 +2,13 @@
 
 namespace R2L;
 
+/**
+ * Class CSSProcessorTest
+ *
+ * @package R2L
+ */
 class CSSProcessorTest extends AbstractProcessorTest
 {
-
     static public function getProcessor(): ProcessorInterface
     {
         return new CSSProcessor('');

@@ -2,9 +2,13 @@
 
 namespace R2L;
 
+/**
+ * Class LiquidProcessor
+ *
+ * @package R2L
+ */
 class LiquidProcessor implements ProcessorInterface
 {
-
     /**
      * @var ProcessorInterface $next
      */

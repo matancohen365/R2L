@@ -2,9 +2,13 @@
 
 namespace R2L;
 
+/**
+ * Class SassProcessorTest
+ *
+ * @package R2L
+ */
 class SassProcessorTest extends AbstractProcessorTest
 {
-
     static public function getProcessor(): ProcessorInterface
     {
         return new SassProcessor('');
