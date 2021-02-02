@@ -1,6 +1,10 @@
 <?php
 
-namespace R2L;
+namespace Tests\R2L;
+
+use R2L\CSSProcessor;
+use R2L\HTMLProcessor;
+use R2L\ProcessorInterface;
 
 /**
  * Class HTMLProcessorTest

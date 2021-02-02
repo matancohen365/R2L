@@ -1,6 +1,9 @@
 <?php
 
-namespace R2L;
+namespace Tests\R2L;
+
+use R2L\ProcessorInterface;
+use R2L\EmptyProcessor;
 
 /**
  * Class EmptyProcessorTest

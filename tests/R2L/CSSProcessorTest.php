@@ -1,6 +1,9 @@
 <?php
 
-namespace R2L;
+namespace Tests\R2L;
+
+use R2L\CSSProcessor;
+use R2L\ProcessorInterface;
 
 /**
  * Class CSSProcessorTest
@@ -22,9 +25,9 @@ class CSSProcessorTest extends AbstractProcessorTest
 
         static::assertResults('padding:1px 2px 3px;', 'padding:1px 2px 3px;');
 
-        static::assertResults('padding:1px 2% 3px 4rem;', 'padding-top: 1px; padding-left: 2%; padding-bottom: 3px; padding-right: 4rem;');
+        static::assertResults('padding:1px 2% 3px 4rem;', sprintf("padding-top: 1px; padding-%s: 2%%; padding-bottom: 3px; padding-%s: 4rem;", CSSProcessor::DIRECTION_END, CSSProcessor::DIRECTION_START));
 
-        static::assertResults('padding:1px 2% 3px 4rem !important;', 'padding-top: 1px !important; padding-left: 2% !important; padding-bottom: 3px !important; padding-right: 4rem !important;');
+        static::assertResults('padding:1px 2% 3px 4rem !important;', sprintf("padding-top: 1px !important; padding-%s: 2%% !important; padding-bottom: 3px !important; padding-%s: 4rem !important;", CSSProcessor::DIRECTION_END, CSSProcessor::DIRECTION_START));
 
         static::assertResults('margin:1px;', 'margin:1px;');
 
@@ -32,9 +35,9 @@ class CSSProcessorTest extends AbstractProcessorTest
 
         static::assertResults('margin:1px 2px 3px;', 'margin:1px 2px 3px;');
 
-        static::assertResults('margin:1px 2% 3px 4rem;', 'margin-top: 1px; margin-left: 2%; margin-bottom: 3px; margin-right: 4rem;');
+        static::assertResults('margin:1px 2% 3px 4rem;', sprintf("margin-top: 1px; margin-%s: 2%%; margin-bottom: 3px; margin-%s: 4rem;", CSSProcessor::DIRECTION_END, CSSProcessor::DIRECTION_START));
 
-        static::assertResults('margin:1px 2% 3px 4rem !important;', 'margin-top: 1px !important; margin-left: 2% !important; margin-bottom: 3px !important; margin-right: 4rem !important;');
+        static::assertResults('margin:1px 2% 3px 4rem !important;', sprintf("margin-top: 1px !important; margin-%s: 2%% !important; margin-bottom: 3px !important; margin-%s: 4rem !important;", CSSProcessor::DIRECTION_END, CSSProcessor::DIRECTION_START));
 
         static::assertResults('border-radius:1px;', 'border-radius:1px;');
 
@@ -42,28 +45,28 @@ class CSSProcessorTest extends AbstractProcessorTest
 
         static::assertResults('border-radius:1px 2px 3px;', 'border-radius:1px 2px 3px;');
 
-        static::assertResults('border-radius:1px 2% 3px 4rem;', 'border-top-right-radius: 1px; border-top-left-radius: 2%; border-bottom-left-radius: 3px; border-bottom-right-radius: 4rem;');
+        static::assertResults('border-radius:1px 2% 3px 4rem;', sprintf("border-top-%s-radius: 1px; border-top-%s-radius: 2%%; border-bottom-%s-radius: 3px; border-bottom-%s-radius: 4rem;", CSSProcessor::DIRECTION_START, CSSProcessor::DIRECTION_END, CSSProcessor::DIRECTION_END, CSSProcessor::DIRECTION_START));
 
-        static::assertResults('border-radius:1px 2% 3px 4rem !important;', 'border-top-right-radius: 1px !important; border-top-left-radius: 2% !important; border-bottom-left-radius: 3px !important; border-bottom-right-radius: 4rem !important;');
+        static::assertResults('border-radius:1px 2% 3px 4rem !important;', sprintf("border-top-%s-radius: 1px !important; border-top-%s-radius: 2%% !important; border-bottom-%s-radius: 3px !important; border-bottom-%s-radius: 4rem !important;", CSSProcessor::DIRECTION_START, CSSProcessor::DIRECTION_END, CSSProcessor::DIRECTION_END, CSSProcessor::DIRECTION_START));
 
-        static::assertResults('.custom-file-label::after { border-radius: 0 .25rem .25rem 0 }', '.custom-file-label::after { border-top-right-radius: 0; border-top-left-radius: .25rem; border-bottom-left-radius: .25rem; border-bottom-right-radius: 0}');
+        static::assertResults('.custom-file-label::after { border-radius: 0 .25rem .25rem 0 }', sprintf(".custom-file-label::after { border-top-%s-radius: 0; border-top-%s-radius: .25rem; border-bottom-%s-radius: .25rem; border-bottom-%s-radius: 0}", CSSProcessor::DIRECTION_START, CSSProcessor::DIRECTION_END, CSSProcessor::DIRECTION_END, CSSProcessor::DIRECTION_START));
 
-        static::assertResults('.custom-file-label::after { border-radius: 0 .25rem .25rem 0 !important }', '.custom-file-label::after { border-top-right-radius: 0 !important; border-top-left-radius: .25rem !important; border-bottom-left-radius: .25rem !important; border-bottom-right-radius: 0 !important}');
+        static::assertResults('.custom-file-label::after { border-radius: 0 .25rem .25rem 0 !important }', sprintf(".custom-file-label::after { border-top-%s-radius: 0 !important; border-top-%s-radius: .25rem !important; border-bottom-%s-radius: .25rem !important; border-bottom-%s-radius: 0 !important}", CSSProcessor::DIRECTION_START, CSSProcessor::DIRECTION_END, CSSProcessor::DIRECTION_END, CSSProcessor::DIRECTION_START));
     }
 
     public function testDirectionsProcessed()
     {
-        static::assertResults('dir:ltr;', 'dir:rtl;');
+        static::assertResults(sprintf("dir:%s;", CSSProcessor::UPSIDE_DIRECTION), sprintf("dir:%s;", CSSProcessor::DIRECTION));
 
-        static::assertResults('body[dir="ltr"]', 'body[dir="rtl"]');
+        static::assertResults(sprintf("body[dir=\"%s\"]", CSSProcessor::UPSIDE_DIRECTION), sprintf("body[dir=\"%s\"]", CSSProcessor::DIRECTION));
 
-        static::assertResults('dir:rtl;', 'dir:ltr;');
+        static::assertResults(sprintf("dir:%s;", CSSProcessor::DIRECTION), sprintf("dir:%s;", CSSProcessor::UPSIDE_DIRECTION));
 
-        static::assertResults('body[dir="rtl"]', 'body[dir="ltr"]');
+        static::assertResults(sprintf("body[dir=\"%s\"]", CSSProcessor::DIRECTION), sprintf("body[dir=\"%s\"]", CSSProcessor::UPSIDE_DIRECTION));
 
-        static::assertResults('wordwithltrinit', 'wordwithltrinit');
+        static::assertResults(sprintf("wordwith%sinit", CSSProcessor::UPSIDE_DIRECTION), sprintf("wordwith%sinit", CSSProcessor::UPSIDE_DIRECTION));
 
-        static::assertResults('wordwithrtlinit', 'wordwithrtlinit');
+        static::assertResults(sprintf("wordwith%sinit", CSSProcessor::DIRECTION), sprintf("wordwith%sinit", CSSProcessor::DIRECTION));
     }
 
     public function testAnglesProcessed()
@@ -91,16 +94,16 @@ class CSSProcessorTest extends AbstractProcessorTest
 
     public function testRulesProcessed()
     {
-        static::assertResults('left:0px;', 'right:0px;');
+        static::assertResults(sprintf("%s:0px;", CSSProcessor::DIRECTION_END), sprintf("%s:0px;", CSSProcessor::DIRECTION_START));
 
-        static::assertResults('left  :  0px ;', 'right  :  0px ;');
+        static::assertResults(sprintf("%s  :  0px ;", CSSProcessor::DIRECTION_END), sprintf("%s  :  0px ;", CSSProcessor::DIRECTION_START));
 
-        static::assertResults('text : left;', 'text : right;');
+        static::assertResults(sprintf("text : %s;", CSSProcessor::DIRECTION_END), sprintf("text : %s;", CSSProcessor::DIRECTION_START));
 
-        static::assertResults('copyright', 'copyright');
+        static::assertResults(sprintf("copy%s", CSSProcessor::DIRECTION_START), sprintf("copy%s", CSSProcessor::DIRECTION_START));
 
-        static::assertResults('.right-text { left:right; }', '.right-text { right:left; }');
+        static::assertResults(sprintf(".%s-text { %s:%s; }", CSSProcessor::DIRECTION_START, CSSProcessor::DIRECTION_END, CSSProcessor::DIRECTION_START), sprintf(".%s-text { %s:%s; }", CSSProcessor::DIRECTION_START, CSSProcessor::DIRECTION_START, CSSProcessor::DIRECTION_END));
 
-        static::assertResults('.left-text { left:right; }', '.left-text { right:left; }');
+        static::assertResults(sprintf(".%s-text { %s:%s; }", CSSProcessor::DIRECTION_END, CSSProcessor::DIRECTION_END, CSSProcessor::DIRECTION_START), sprintf(".%s-text { %s:%s; }", CSSProcessor::DIRECTION_END, CSSProcessor::DIRECTION_START, CSSProcessor::DIRECTION_END));
     }
 }

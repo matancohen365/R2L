@@ -1,8 +1,9 @@
 <?php
 
-namespace R2L;
+namespace Tests\R2L;
 
 use PHPUnit\Framework\TestCase;
+use R2L\ProcessorInterface;
 
 /**
  * Class AbstractProcessorTest

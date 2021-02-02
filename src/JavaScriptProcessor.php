@@ -14,6 +14,17 @@ class JavaScriptProcessor implements ProcessorInterface
      */
     public function process(string $contents): string
     {
-        return str_ireplace('rtl:!1', 'rtl:true', $contents);
+        return $this->processSlickJS($contents);
+    }
+
+    /**
+     * Process slick.js
+     *
+     * @param string $contents
+     * @return string
+     */
+    public function processSlickJS(string $contents): string
+    {
+        return str_replace('rtl:!1', 'rtl:true', $contents);
     }
 }

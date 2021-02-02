@@ -71,7 +71,7 @@ class LocaleFileProcessor implements ProcessorInterface
                     if (is_array($value) && array_key_exists($key, $merged) && is_array($merged[$key]))
                         $merged[$key] = call_user_func([$this, __FUNCTION__], $merged[$key], $value);
                     else
-                        $merged[$key] = $value;
+                        $merged[$key] = $value; // todo <matancohen365@gmail.com> call translator provider.
                 else
                     $merged[] = $value;
         }

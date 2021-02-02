@@ -137,7 +137,7 @@ class CSSProcessor implements ProcessorInterface
             function ($matches) {
                 return str_ireplace(
                     [static::DIRECTION, static::UPSIDE_DIRECTION, static::TEMP_REPLACEMENT,],
-                    [static::TEMP_REPLACEMENT, static::DIRECTION, static::UPSIDE_DIRECTION],
+                    [static::TEMP_REPLACEMENT, static::DIRECTION, static::UPSIDE_DIRECTION,],
                     $matches[0]
                 );
             },
@@ -185,7 +185,7 @@ class CSSProcessor implements ProcessorInterface
             function ($matches) {
                 return str_ireplace(
                     [static::DIRECTION_START, static::DIRECTION_END, static::TEMP_REPLACEMENT,],
-                    [static::TEMP_REPLACEMENT, static::DIRECTION_START, static::DIRECTION_END],
+                    [static::TEMP_REPLACEMENT, static::DIRECTION_START, static::DIRECTION_END,],
                     $matches[0]
                 );
             },

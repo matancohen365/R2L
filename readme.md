@@ -1,11 +1,10 @@
+# Auto RTL
 
-### R2L (RTL TO LTR)
+Allows you to take a frontend template designed for left-to-right usage and transform it into right-to-left design.
 
-right-to-left your left-to-right assets in a push of a button
+## Usage
 
-### 🍕 How to use?
-
-##### *.css files
+### *.css files
 
 ```php
 
@@ -25,7 +24,7 @@ file_put_contents('path/to/theme.rtl.css', $RTLContents);
 
 ```
   
-##### *.liquid.sass files (Shopify templates)
+### *.liquid.sass files (Shopify templates)
 
 ```php
 
@@ -46,10 +45,21 @@ file_put_contents('path/to/theme.rtl.liquid.sass', $RTLContents);
 
 ```
 
-### TODO
+## Installation
+
+### With Composer
+
+```
+$ composer require matancohen365/auto-rtl
+```
+
+## TODOs
  - Better Tests.
+
+## Thanks
+ * [Alexander Raskin][1] for [ltr2rtl][2]
  
-### 🙋️ Questions? Need some help? 
+## Questions
  - matancohen365@gmail.com
  
 🆓 License
@@ -58,3 +68,6 @@ file_put_contents('path/to/theme.rtl.liquid.sass', $RTLContents);
 MIT
 
 **Free Software, Hell Yeah!**
+
+[1]: https://github.com/intval
+[2]: https://github.com/intval/ltr2rtl

@@ -1,6 +1,11 @@
 <?php
 
-namespace R2L;
+namespace Tests\R2L;
+
+use R2L\CSSProcessor;
+use R2L\EmptyProcessor;
+use R2L\LiquidProcessor;
+use R2L\ProcessorInterface;
 
 /**
  * Class LiquidProcessorTest
