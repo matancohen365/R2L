@@ -65,9 +65,10 @@ $ composer require matancohen365/auto-rtl
 🆓 License
 ----
 
-MIT
+The Non-Profit Open Software License version 3.0 (NPOSL-3.0)
 
-**Free Software, Hell Yeah!**
+[https://opensource.org/licenses/NPOSL-3.0][3]
 
 [1]: https://github.com/intval
 [2]: https://github.com/intval/ltr2rtl
+[3]: [https://opensource.org/licenses/NPOSL-3.0]
