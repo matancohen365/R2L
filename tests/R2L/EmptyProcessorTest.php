@@ -19,14 +19,14 @@ class EmptyProcessorTest extends AbstractProcessorTest
 
     public function testHTMLContentShouldBeEqualsAfterProcessing()
     {
-        $contents = file_get_contents(__DIR__ . './../stubs/stub.html');
+        $contents = file_get_contents(__DIR__ . './../stubs/html.stub');
 
         self::assertResults($contents, $contents);
     }
 
     public function testCSSContentShouldBeEqualsAfterProcessing()
     {
-        $contents = file_get_contents(__DIR__ . './../stubs/stub.css');
+        $contents = file_get_contents(__DIR__ . './../stubs/css.stub');
 
         self::assertResults($contents, $contents);
     }

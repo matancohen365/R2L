@@ -15,15 +15,15 @@ class LocaleFileProcessorTest extends AbstractProcessorTest
     static public function getProcessor(): ProcessorInterface
     {
         return new LocaleFileProcessor(
-            file_get_contents(__DIR__ . './../stubs/stub.template.locale.json')
+            file_get_contents(__DIR__ . './../stubs/template.locale.json.stub')
         );
     }
 
     public function testProcessing()
     {
-        $contents = file_get_contents(__DIR__ . './../stubs/stub.locale.json');
+        $contents = file_get_contents(__DIR__ . './../stubs/locale.json.stub');
 
-        $result = file_get_contents(__DIR__ . './../stubs/stub.result.locale.json');
+        $result = file_get_contents(__DIR__ . './../stubs/result.locale.json.stub');
 
         self::assertResults($contents, $result);
     }

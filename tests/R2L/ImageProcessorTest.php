@@ -19,9 +19,9 @@ class ImageProcessorTest extends AbstractProcessorTest
 
     public function testProcessing()
     {
-        $contents = file_get_contents(__DIR__ . './../stubs/stub.png');
+        $contents = file_get_contents(__DIR__ . './../stubs/png.stub');
 
-        $result = file_get_contents(__DIR__ . './../stubs/stub.result.png');
+        $result = file_get_contents(__DIR__ . './../stubs/result.png.stub');
 
         static::assertResults($contents, $result);
     }
