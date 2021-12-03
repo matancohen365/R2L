@@ -5,7 +5,7 @@ Allows you to take a frontend template designed for left-to-right usage and tran
 
 ## Demo
 
-[https://ltr2rtl.com/][4]
+[R2L - LTR to RTL Converter](https://ltr2rtl.com/)
 
 ## Usage
 
@@ -57,12 +57,6 @@ file_put_contents('path/to/theme.rtl.liquid.sass', $RTLContents);
 ```
 $ composer require matancohen365/auto-rtl
 ```
-
-## TODOs
- - Better Tests.
-
-## Thanks
- * [Alexander Raskin][1] for [ltr2rtl][2]
  
 ## Questions
  - matancohen365@gmail.com
@@ -70,11 +64,4 @@ $ composer require matancohen365/auto-rtl
 🆓 License
 ----
 
-The Non-Profit Open Software License version 3.0 (NPOSL-3.0)
-
-[https://opensource.org/licenses/NPOSL-3.0][3]
-
-[1]: https://github.com/intval
-[2]: https://github.com/intval/ltr2rtl
-[3]: https://opensource.org/licenses/NPOSL-3.0
-[4]: https://ltr2rtl.com/
+The R2L package is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
