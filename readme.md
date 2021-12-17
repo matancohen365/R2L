@@ -1,5 +1,7 @@
 
-# Auto RTL
+# R2L
+
+LTR to RTL Converter
 
 Allows you to take a frontend template designed for left-to-right usage and transform it into right-to-left design.
 
