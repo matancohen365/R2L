@@ -5,9 +5,13 @@ LTR to RTL Converter
 
 Allows you to take a frontend template designed for left-to-right usage and transform it into right-to-left design.
 
-## Demo
+## Installation
 
-[R2L - LTR to RTL Converter](https://ltr2rtl.com/)
+### With Composer
+
+```
+$ composer require matancohen365/r2l
+```
 
 ## Usage
 
@@ -52,13 +56,9 @@ file_put_contents('path/to/theme.rtl.liquid.sass', $RTLContents);
 
 ```
 
-## Installation
+## Demo
 
-### With Composer
-
-```
-$ composer require matancohen365/auto-rtl
-```
+[R2L - LTR to RTL Converter](https://ltr2rtl.com/)
  
 ## Questions
  - matancohen365@gmail.com
