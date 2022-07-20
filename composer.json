@@ -1,6 +1,6 @@
 {
   "name": "matancohen365/r2l",
-  "description": "Right-to-Left your Left-to-Right assets in a push of a button",
+  "description": "LTR to RTL Converter - Allows you to take a frontend template designed for left-to-right usage and transform it into right-to-left design.",
   "type": "library",
   "license": "MIT",
   "authors": [
